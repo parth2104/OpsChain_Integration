@@ -1,0 +1,30 @@
+resources:
+  jobs:
+    Data_Migration_Pipeline:
+      name: Data_Migration_Pipeline
+      tasks:
+        - task_key: dim_cuistomers
+          notebook_task:
+            notebook_path: ../src/notebook/Bronze_Silver_customers.ipynb
+            source: WORKSPACE
+        - task_key: dim_products
+          depends_on:
+            - task_key: dim_cuistomers
+          notebook_task:
+            notebook_path: ../src/notebook/Bronze_Silver_Product_data.ipynb
+            source: WORKSPACE
+        - task_key: dim_price
+          depends_on:
+            - task_key: dim_products
+          notebook_task:
+            notebook_path: ../src/notebook/Bronze_Silver_Price_data.ipynb
+            source: WORKSPACE
+        - task_key: dim_Oders
+          depends_on:
+            - task_key: dim_price
+          notebook_task:
+            notebook_path: ../src/notebook/Bronze_Silver_oders_data.ipynb
+            source: WORKSPACE
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED
